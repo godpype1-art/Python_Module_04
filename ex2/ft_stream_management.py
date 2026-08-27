@@ -11,10 +11,16 @@ def main() -> None:
         filename: str = sys.argv[1]
         file: typing.IO = open(filename, "r")
     except FileNotFoundError as error:
-        print(f"Error opening file '{filename}': {error}")
+        print(
+            f"[STDERR] Error opening file '{filename}': {error}",
+            file=sys.stderr
+              )
         return
     except PermissionError as error:
-        print(f"Error opening file '{filename}': {error}")
+        print(
+            f"[STDERR] Error opening file '{filename}': {error}",
+            file=sys.stderr
+            )
         return
     else:
         print(f"Accessing file '{filename}'")
@@ -35,7 +41,9 @@ def main() -> None:
         print(line)
     print()
     print("---")
-    new_filename: str = input("Enter new file name (or empty): ")
+    sys.stdout.write("Enter new file name (or empty): ")
+    sys.stdout.flush()
+    new_filename: str = sys.stdin.readline().strip("\n")
     if new_filename == "":
         print("Not saving data")
     else:
