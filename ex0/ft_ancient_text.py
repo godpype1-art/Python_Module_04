@@ -10,10 +10,7 @@ def main() -> None:
     try:
         filename: str = sys.argv[1]
         file: typing.IO = open(filename, "r")
-    except FileNotFoundError as error:
-        print(f"Error opening file '{filename}': {error}")
-        return
-    except PermissionError as error:
+    except (FileNotFoundError, PermissionError) as error:
         print(f"Error opening file '{filename}': {error}")
         return
     else:

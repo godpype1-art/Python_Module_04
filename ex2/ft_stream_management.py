@@ -6,17 +6,11 @@ def main() -> None:
     if len(sys.argv) != 2:
         print("Usage: ft_ancient_text.py <file>")
         return
-    print("=== Cyber Archives Recovery & and Preservation ===")
+    print("=== Cyber Archives Recovery & Preservation ===")
     try:
         filename: str = sys.argv[1]
         file: typing.IO = open(filename, "r")
-    except FileNotFoundError as error:
-        print(
-            f"[STDERR] Error opening file '{filename}': {error}",
-            file=sys.stderr
-              )
-        return
-    except PermissionError as error:
+    except (FileNotFoundError, PermissionError, IsADirectoryError) as error:
         print(
             f"[STDERR] Error opening file '{filename}': {error}",
             file=sys.stderr
@@ -41,19 +35,38 @@ def main() -> None:
         print(line)
     print()
     print("---")
-    sys.stdout.write("Enter new file name (or empty): ")
-    sys.stdout.flush()
-    new_filename: str = sys.stdin.readline().strip("\n")
-    if new_filename == "":
-        print("Not saving data")
-    else:
-        new_file: typing.IO = open(new_filename, "w")
-        for line in lines:
-            new_file.write(line)
-            new_file.write("\n")
-        print(f"Saving data to '{new_filename}'")
-        print(f"Data saved in file '{new_filename}'")
-    return
+    while True:
+        try:
+            sys.stdout.write("Enter new file name (or empty): ")
+            sys.stdout.flush()
+            raw: str = sys.stdin.readline()
+            if raw == "":
+                raise EOFError
+            new_filename: str = raw.strip("\n")
+        except (KeyboardInterrupt, EOFError) as error:
+            print(error)
+        else:
+            if new_filename == "":
+                print("Not saving data.")
+                return
+            else:
+                print(f"Saving data to '{new_filename}'")
+                try:
+                    new_file: typing.IO = open(new_filename, "w")
+                except (FileNotFoundError, PermissionError, IsADirectoryError) as error:
+                    print(
+                        f"[STDERR] Error opening file '{new_filename}': {error}",
+                        file=sys.stderr
+                        )
+                    print("Data not saved.")
+                    return
+                else:
+                    for line in lines:
+                        new_file.write(line)
+                        new_file.write("\n")
+                    print(f"Data saved in file '{new_filename}'")
+                    new_file.close()
+                    return
 
 
 if __name__ == "__main__":

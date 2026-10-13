@@ -11,7 +11,7 @@ def secure_archive(filename: str, mode: str = "r", content: str = ""
             else:
                 content = f"Invalid mode '{mode}'"
                 return (valid, content)
-    except (FileNotFoundError, PermissionError) as error:
+    except (FileNotFoundError, PermissionError, IsADirectoryError) as error:
         content = str(error)
     valid = True
     return (valid, content)
@@ -33,7 +33,7 @@ def main() -> None:
     print(secure_archive(
         "test.txt", "w",
         "[FRAGMENT 001] Digital preservation protocols established"
-        "2087\n[FRAGMENT 002]Knowledge must survive the entropy"
+        "2087\n[FRAGMENT 002] Knowledge must survive the entropy"
         "wars\n[FRAGMENT 003] Every byte saved is a victory against oblivion"
         ))
 

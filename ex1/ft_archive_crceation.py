@@ -6,14 +6,11 @@ def main() -> None:
     if len(sys.argv) != 2:
         print("Usage: ft_ancient_text.py <file>")
         return
-    print("=== Cyber Archives Recovery & and Preservation ===")
+    print("=== Cyber Archives Recovery & Preservation ===")
     try:
         filename: str = sys.argv[1]
         file: typing.IO = open(filename, "r")
-    except FileNotFoundError as error:
-        print(f"Error opening file '{filename}': {error}")
-        return
-    except PermissionError as error:
+    except (FileNotFoundError, PermissionError, IsADirectoryError) as error:
         print(f"Error opening file '{filename}': {error}")
         return
     else:
@@ -35,17 +32,28 @@ def main() -> None:
         print(line)
     print()
     print("---")
-    new_filename: str = input("Enter new file name (or empty): ")
-    if new_filename == "":
-        print("Not saving data")
-    else:
-        new_file: typing.IO = open(new_filename, "w")
-        for line in lines:
-            new_file.write(line)
-            new_file.write("\n")
-        print(f"Saving data to '{new_filename}'")
-        print(f"Data saved in file '{new_filename}'")
-    return
+    while True:
+        try:
+            new_filename: str = input("Enter new file name (or empty): ")
+        except (KeyboardInterrupt, EOFError) as error:
+            print(error)
+        else:
+            if new_filename == "":
+                print("Not saving data.")
+            else:
+                try:
+                    new_file: typing.IO = open(new_filename, "w")
+                except (FileNotFoundError, PermissionError, IsADirectoryError) as error:
+                    print(error)
+                    return
+                else:
+                    for line in lines:
+                        new_file.write(line)
+                        new_file.write("\n")
+                    print(f"Saving data to '{new_filename}'")
+                    print(f"Data saved in file '{new_filename}'")
+                    new_file.close()
+                    return
 
 
 if __name__ == "__main__":
