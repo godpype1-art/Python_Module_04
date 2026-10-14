@@ -13,7 +13,7 @@ def secure_archive(filename: str, mode: str = "r", content: str = ""
                 return (valid, content)
     except (
         FileNotFoundError, PermissionError, IsADirectoryError, ValueError
-        ) as error:
+            ) as error:
         content = str(error)
     valid = True
     return (valid, content)

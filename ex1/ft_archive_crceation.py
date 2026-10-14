@@ -47,7 +47,9 @@ def main() -> None:
                 else:
                     try:
                         new_file: typing.IO = open(new_filename, "w")
-                    except (FileNotFoundError, PermissionError, IsADirectoryError) as error:
+                    except (
+                        FileNotFoundError, PermissionError, IsADirectoryError
+                            ) as error:
                         print(error)
                         return
                     else:
