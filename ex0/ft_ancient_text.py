@@ -10,19 +10,23 @@ def main() -> None:
     try:
         filename: str = sys.argv[1]
         file: typing.IO = open(filename, "r")
-    except (FileNotFoundError, PermissionError) as error:
+    except (FileNotFoundError, PermissionError, IsADirectoryError) as error:
         print(f"Error opening file '{filename}': {error}")
         return
     else:
         print(f"Accessing file '{filename}'")
     print("---")
     print()
-    content: str = file.read()
-    print(f"{content}")
-    print()
-    print("---")
-    file.close()
-    print(f"File '{filename}' was closed.")
+    try:
+        content: str = file.read()
+    except ValueError as error:
+        print(f"Error reading from file '{filename}': {error}")
+    else:
+        print(f"{content}")
+        print()
+        print("---")
+        file.close()
+        print(f"File '{filename}' was closed.")
 
 
 if __name__ == "__main__":

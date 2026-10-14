@@ -17,43 +17,47 @@ def main() -> None:
         print(f"Accessing file '{filename}'")
     print("---")
     print()
-    content: str = file.read()
-    print(f"{content}")
-    print()
-    print("---")
-    file.close()
-    print(f"File '{filename}' was closed.")
-    print()
-    print("Transform data:")
-    print("---")
-    print()
-    lines: list[str] = [line + "#" for line in content.split("\n")]
-    for line in lines:
-        print(line)
-    print()
-    print("---")
-    while True:
-        try:
-            new_filename: str = input("Enter new file name (or empty): ")
-        except (KeyboardInterrupt, EOFError) as error:
-            print(error)
-        else:
-            if new_filename == "":
-                print("Not saving data.")
+    try:
+        content: str = file.read()
+    except ValueError as error:
+        print(f"Error reading from file '{filename}': {error}")
+    else:
+        print(f"{content}")
+        print()
+        print("---")
+        file.close()
+        print(f"File '{filename}' was closed.")
+        print()
+        print("Transform data:")
+        print("---")
+        print()
+        lines: list[str] = [line + "#" for line in content.split("\n")]
+        for line in lines:
+            print(line)
+        print()
+        print("---")
+        while True:
+            try:
+                new_filename: str = input("Enter new file name (or empty): ")
+            except (KeyboardInterrupt, EOFError) as error:
+                print(error)
             else:
-                try:
-                    new_file: typing.IO = open(new_filename, "w")
-                except (FileNotFoundError, PermissionError, IsADirectoryError) as error:
-                    print(error)
-                    return
+                if new_filename == "":
+                    print("Not saving data.")
                 else:
-                    for line in lines:
-                        new_file.write(line)
-                        new_file.write("\n")
-                    print(f"Saving data to '{new_filename}'")
-                    print(f"Data saved in file '{new_filename}'")
-                    new_file.close()
-                    return
+                    try:
+                        new_file: typing.IO = open(new_filename, "w")
+                    except (FileNotFoundError, PermissionError, IsADirectoryError) as error:
+                        print(error)
+                        return
+                    else:
+                        for line in lines:
+                            new_file.write(line)
+                            new_file.write("\n")
+                        print(f"Saving data to '{new_filename}'")
+                        print(f"Data saved in file '{new_filename}'")
+                        new_file.close()
+                        return
 
 
 if __name__ == "__main__":
