@@ -10,7 +10,7 @@ def main() -> None:
     try:
         filename: str = sys.argv[1]
         file: typing.IO = open(filename, "r")
-    except (FileNotFoundError, PermissionError, IsADirectoryError) as error:
+    except OSError as error:
         print(f"Error opening file '{filename}': {error}")
         return
     else:
@@ -44,12 +44,11 @@ def main() -> None:
             else:
                 if new_filename == "":
                     print("Not saving data.")
+                    return
                 else:
                     try:
                         new_file: typing.IO = open(new_filename, "w")
-                    except (
-                        FileNotFoundError, PermissionError, IsADirectoryError
-                            ) as error:
+                    except OSError as error:
                         print(error)
                         return
                     else:

@@ -57,9 +57,7 @@ def main() -> None:
                     print(f"Saving data to '{new_filename}'")
                     try:
                         new_file: typing.IO = open(new_filename, "w")
-                    except (
-                        FileNotFoundError, PermissionError, IsADirectoryError
-                            ) as error:
+                    except OSError as error:
                         print(
                             f"[STDERR] Error opening file '{new_filename}': "
                             f"{error}",
