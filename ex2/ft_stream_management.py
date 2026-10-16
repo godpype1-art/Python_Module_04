@@ -10,7 +10,7 @@ def main() -> None:
     try:
         filename: str = sys.argv[1]
         file: typing.IO = open(filename, "r")
-    except (FileNotFoundError, PermissionError, IsADirectoryError) as error:
+    except OSError as error:
         print(
             f"[STDERR] Error opening file '{filename}': {error}",
             file=sys.stderr
